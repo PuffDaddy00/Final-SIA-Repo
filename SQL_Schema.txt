@@ -1,0 +1,54 @@
+CREATE DATABASE IF NOT EXISTS sites_db;
+USE sites_db;
+
+-- Create the 'users' table
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  name VARCHAR(150),
+  email VARCHAR(150),
+  contact VARCHAR(50),
+  profilePic VARCHAR(255),
+  role ENUM('Admin', 'Leader', 'Member') DEFAULT 'Member'
+);
+
+-- Insert test users
+INSERT INTO users (username, password, name, email, contact, profilePic, role)
+VALUES 
+-- Admin
+('admin', 'admin123', 'Admin User', 'admin@sites.com', '09123456789', 'SITES LOGO.png', 'Admin'),
+
+-- Leader
+('leader1', 'leader123', 'Leader User', 'leader@sites.com', '09112223344', 'leader.png', 'Leader'),
+
+-- Member
+('member1', 'member123', 'Member User', 'member@sites.com', '09998887766', 'member.png', 'Member');
+
+
+
+
+-- Main task table
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    due_date DATE NOT NULL,
+    priority ENUM('Low','Medium','High') DEFAULT 'Medium',
+    status ENUM('Pending','Done','Overdue') DEFAULT 'Pending'
+);
+
+-- Subtasks table
+CREATE TABLE task_subtasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_id INT NOT NULL,
+    subtask VARCHAR(255) NOT NULL,
+    FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+);
+
+-- Assigned members table
+CREATE TABLE task_assignments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    task_id INT NOT NULL,
+    member_id VARCHAR(50) NOT NULL,
+    FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+);
